@@ -6,24 +6,24 @@
 }
 
 :root {
-    --primary-color: #0066cc;
-    --primary-dark: #0052a3;
-    --primary-light: #3385d6;
-    --secondary-color: #00a8e8;
-    --accent-color: #ff6b35;
-    --text-color: #1a1a1a;
-    --text-light: #666666;
-    --text-lighter: #999999;
+    --primary-color: #0056b3; /* Darker, more modern blue */
+    --primary-dark: #003d82;
+    --primary-light: #4dabf7;
+    --secondary-color: #00c4cc; /* Teal accent */
+    --accent-color: #ff6b6b; /* Softer red/orange */
+    --text-color: #212529;
+    --text-light: #495057;
+    --text-lighter: #868e96;
     --bg-color: #ffffff;
     --bg-light: #f8f9fa;
-    --bg-lighter: #fafbfc;
-    --border-color: #e0e0e0;
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-    --shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.15);
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --border-radius: 12px;
+    --bg-lighter: #f1f3f5;
+    --border-color: #dee2e6;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.12);
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); /* Smoother ease */
+    --border-radius: 16px;
     --border-radius-sm: 8px;
 }
 
@@ -31,9 +31,31 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Smooth scroll enhancement */
+html.lenis {
+    height: auto;
+}
+
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+    pointer-events: none;
+}
+
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    line-height: 1.7;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    letter-spacing: -0.01em; /* Modern tight tracking */
     color: var(--text-color);
     background-color: var(--bg-color);
     font-size: 16px;
@@ -41,21 +63,15 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
-}
-
-/* Header and Navigation */
+/* Modern Glassmorphism Header */
 .header {
-    background-color: var(--bg-color);
+    background-color: rgba(255, 255, 255, 0.8);
     box-shadow: var(--shadow-sm);
     position: sticky;
     top: 0;
     z-index: 1000;
-    backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .navbar {

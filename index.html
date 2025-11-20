@@ -9,6 +9,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Modern Animation Libraries -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </head>
 <body>
     <header class="header">
@@ -45,8 +51,7 @@
             <div class="container">
                 <div class="hero-content">
                     <h1 class="hero-title">
-                        <span class="typing-text" id="typing-text">Развитие искусственного интеллекта</span>
-                        <span class="cursor-blink">|</span>
+                        <span class="reveal-text" id="typing-text">Развитие искусственного интеллекта</span>
                     </h1>
                     <p class="hero-subtitle">Продвижение исследований и ответственного использования <span class="ai-highlight">искусственного интеллекта</span></p>
                     <div class="hero-buttons">
@@ -63,12 +68,12 @@
 
         <section id="news" class="news">
             <div class="container">
-                <div class="section-header">
+                <div class="section-header" data-aos="fade-up">
                     <h2>Последние новости и объявления</h2>
                     <p class="section-subtitle">Будьте в курсе последних достижений в исследованиях ИИ</p>
                 </div>
                 <div class="news-grid">
-                    <article class="news-card ai-news-card">
+                    <article class="news-card ai-news-card" data-aos="fade-up" data-aos-delay="0">
                         <div class="news-glow"></div>
                         <div class="news-date">Март 2024</div>
                         <h3>Материалы конференции AAAI-24 доступны</h3>
@@ -79,7 +84,7 @@
                         </div>
                         <a href="#" class="news-link">Читать далее →</a>
                     </article>
-                    <article class="news-card ai-news-card">
+                    <article class="news-card ai-news-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="news-glow"></div>
                         <div class="news-date">Февраль 2024</div>
                         <h3>Прием статей: AAAI-25</h3>
@@ -90,7 +95,7 @@
                         </div>
                         <a href="#" class="news-link">Читать далее →</a>
                     </article>
-                    <article class="news-card ai-news-card">
+                    <article class="news-card ai-news-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="news-glow"></div>
                         <div class="news-date">Январь 2024</div>
                         <h3>Опубликованы новые этические принципы ИИ</h3>
