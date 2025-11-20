@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Animate cards on scroll
-        gsap.utils.toArray('.news-card, .conference-card, .publication-item').forEach((card, i) => {
+        gsap.utils.toArray('.news-card, .conference-card, .publication-item, .team-member').forEach((card, i) => {
             gsap.from(card, {
                 y: 60,
                 opacity: 0,
@@ -400,6 +400,59 @@ document.addEventListener('DOMContentLoaded', function() {
                     toggleActions: 'play none none reverse'
                 },
                 delay: i * 0.1
+            });
+        });
+
+        // Interactive hover effects for team members
+        document.querySelectorAll('.team-member').forEach(member => {
+            member.addEventListener('mouseenter', function() {
+                gsap.to(this, {
+                    scale: 1.02,
+                    y: -10,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+            });
+            
+            member.addEventListener('mouseleave', function() {
+                gsap.to(this, {
+                    scale: 1,
+                    y: 0,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+            });
+        });
+
+        // Interactive card tilt effect
+        document.querySelectorAll('.conference-card, .news-card').forEach(card => {
+            card.addEventListener('mousemove', function(e) {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                gsap.to(card, {
+                    rotationX: rotateX,
+                    rotationY: rotateY,
+                    transformPerspective: 1000,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                gsap.to(card, {
+                    rotationX: 0,
+                    rotationY: 0,
+                    duration: 0.5,
+                    ease: 'power2.out'
+                });
             });
         });
 
