@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Animate cards on scroll
-        gsap.utils.toArray('.news-card, .conference-card, .publication-item, .team-member').forEach((card, i) => {
+        gsap.utils.toArray('.news-card, .conference-card, .publication-item, .team-member, .membership-card, .committee-card').forEach((card, i) => {
             gsap.from(card, {
                 y: 60,
                 opacity: 0,
@@ -424,23 +424,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // Interactive card tilt effect
-        document.querySelectorAll('.conference-card, .news-card').forEach(card => {
-            card.addEventListener('mousemove', function(e) {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = (y - centerY) / 20;
-                const rotateY = (centerX - x) / 20;
-                
+        // Subtle interactive card effect (removed 3D tilt for professional look)
+        document.querySelectorAll('.conference-card, .news-card, .membership-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
                 gsap.to(card, {
-                    rotationX: rotateX,
-                    rotationY: rotateY,
-                    transformPerspective: 1000,
+                    scale: 1.02,
                     duration: 0.3,
                     ease: 'power2.out'
                 });
@@ -448,9 +436,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             card.addEventListener('mouseleave', function() {
                 gsap.to(card, {
-                    rotationX: 0,
-                    rotationY: 0,
-                    duration: 0.5,
+                    scale: 1,
+                    duration: 0.3,
                     ease: 'power2.out'
                 });
             });
