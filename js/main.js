@@ -96,7 +96,7 @@ const animateNumber = (element, start, end, duration) => {
 
 // Fade in on Scroll
 const fadeInOnScroll = () => {
-    const elements = document.querySelectorAll('.membership-card, .chapter-card, .committee-card, .event-card, .resource-card, .feature-card');
+    const elements = document.querySelectorAll('.membership-card, .chapter-card, .committee-card, .event-card, .resource-card, .feature-card, .team-member');
     
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry, index) => {
@@ -112,10 +112,40 @@ const fadeInOnScroll = () => {
 
     elements.forEach(element => {
         element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        element.style.transform = 'translateY(30px)';
+        element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
         observer.observe(element);
     });
+};
+
+// Team member interactive effects
+const initTeamInteractions = () => {
+    const teamMembers = document.querySelectorAll('.team-member');
+    
+    teamMembers.forEach(member => {
+        member.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-12px) scale(1.02)';
+        });
+        
+        member.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+};
+
+// Parallax effect for hero
+const initParallax = () => {
+    const hero = document.querySelector('.hero');
+    if (hero) {
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroContent = hero.querySelector('.hero-content');
+            if (heroContent && scrolled < window.innerHeight) {
+                heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
+                heroContent.style.opacity = 1 - (scrolled / window.innerHeight) * 0.5;
+            }
+        });
+    }
 };
 
 // Form Handling
@@ -138,6 +168,8 @@ if (contactForm) {
 document.addEventListener('DOMContentLoaded', () => {
     animateStats();
     fadeInOnScroll();
+    initTeamInteractions();
+    initParallax();
 });
 
 // Update active nav link on scroll
