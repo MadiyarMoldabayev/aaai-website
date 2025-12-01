@@ -2,10 +2,23 @@
 // Start output buffering to prevent any accidental output
 ob_start();
 
+// Handle CORS preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: POST, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
+    header('Access-Control-Max-Age: 86400'); // 24 hours
+    ob_end_clean();
+    http_response_code(200);
+    exit;
+}
+
+// Set CORS headers for actual requests
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
+header('Access-Control-Allow-Credentials: false');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     ob_end_clean();
@@ -84,10 +97,13 @@ if (file_exists($phpmailerPath)) {
         $mail->Body = $emailBody;
         
         // Send email
-        $mail->send();
+        if (!$mail->send()) {
+            throw new Exception('Mail send failed: ' . $mail->ErrorInfo);
+        }
         
         ob_end_clean();
         echo json_encode(['success' => true, 'message' => 'Message sent successfully']);
+        exit;
         
     } catch (\PHPMailer\PHPMailer\Exception $e) {
         http_response_code(500);
@@ -101,10 +117,12 @@ if (file_exists($phpmailerPath)) {
         
         // Return user-friendly error message
         ob_end_clean();
+        http_response_code(500);
         echo json_encode([
             'success' => false, 
             'message' => 'Failed to send email. Please try again later or contact us directly.'
         ]);
+        exit;
     } catch (Exception $e) {
         http_response_code(500);
         $exceptionMessage = $e->getMessage();
@@ -118,6 +136,7 @@ if (file_exists($phpmailerPath)) {
             'success' => false, 
             'message' => 'An unexpected error occurred. Please try again later.'
         ]);
+        exit;
     }
 } else {
     // PHPMailer not installed - provide helpful error message
@@ -128,6 +147,7 @@ if (file_exists($phpmailerPath)) {
         'success' => false, 
         'message' => 'Email service not configured. Please install PHPMailer by running: composer install'
     ]);
+    exit;
 }
 ?>
 
