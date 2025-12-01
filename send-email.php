@@ -27,16 +27,39 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Get form data
+// Debug: Log request method and content type
+error_log('Request Method: ' . $_SERVER['REQUEST_METHOD']);
+error_log('Content-Type: ' . ($_SERVER['CONTENT_TYPE'] ?? 'not set'));
+error_log('POST data: ' . print_r($_POST, true));
+error_log('Raw input: ' . file_get_contents('php://input'));
+
+// Get form data - handle both POST and FormData
 $name = isset($_POST['name']) ? trim($_POST['name']) : '';
 $subject = isset($_POST['subject']) ? trim($_POST['subject']) : '';
 $message = isset($_POST['message']) ? trim($_POST['message']) : '';
+
+// If POST is empty, try to parse raw input (for FormData)
+if (empty($_POST) && !empty(file_get_contents('php://input'))) {
+    parse_str(file_get_contents('php://input'), $parsed);
+    if (isset($parsed['name'])) $name = trim($parsed['name']);
+    if (isset($parsed['subject'])) $subject = trim($parsed['subject']);
+    if (isset($parsed['message'])) $message = trim($parsed['message']);
+}
 
 // Validate input
 if (empty($name) || empty($subject) || empty($message)) {
     ob_end_clean();
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'All fields are required']);
+    error_log('Validation failed - Name: ' . ($name ?: 'empty') . ', Subject: ' . ($subject ?: 'empty') . ', Message: ' . ($message ?: 'empty'));
+    echo json_encode([
+        'success' => false, 
+        'message' => 'All fields are required',
+        'debug' => [
+            'name' => $name ?: 'empty',
+            'subject' => $subject ?: 'empty',
+            'message' => $message ?: 'empty'
+        ]
+    ]);
     exit;
 }
 

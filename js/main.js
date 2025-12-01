@@ -172,11 +172,23 @@ if (contactForm) {
             // Get form data
             const formData = new FormData(contactForm);
             
+            // Debug: Log form data
+            console.log('Form data being sent:');
+            for (let [key, value] of formData.entries()) {
+                console.log(key + ':', value);
+            }
+            
             // Send to PHP endpoint
             const response = await fetch('send-email.php', {
                 method: 'POST',
-                body: formData
+                body: formData,
+                headers: {
+                    // Don't set Content-Type - let browser set it with boundary for FormData
+                }
             });
+            
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
             
             // Check if response is ok
             if (!response.ok) {
