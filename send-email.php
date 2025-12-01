@@ -12,27 +12,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Get form data
 $name = isset($_POST['name']) ? trim($_POST['name']) : '';
-$email = isset($_POST['email']) ? trim($_POST['email']) : '';
 $subject = isset($_POST['subject']) ? trim($_POST['subject']) : '';
 $message = isset($_POST['message']) ? trim($_POST['message']) : '';
 
 // Validate input
-if (empty($name) || empty($email) || empty($subject) || empty($message)) {
+if (empty($name) || empty($subject) || empty($message)) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'All fields are required']);
     exit;
 }
 
-// Validate email format
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Invalid email format']);
-    exit;
-}
-
-// Email configuration
+// Email configuration - static sender and receiver
 $fromEmail = 'info@aaai.kz';
-$toEmails = ['info@aaai.kz', 'b.mukina@aaai.com'];
+$toEmail = 'info@aaai.kz';
 $smtpHost = 'srv-plesk01.ps.kz';
 $smtpPort = 465;
 $smtpUsername = 'info@aaai.kz';
@@ -42,7 +34,6 @@ $smtpPassword = 'Astana2025$';
 $emailSubject = "Contact Form: " . htmlspecialchars($subject);
 $emailBody = "You have received a new message from the contact form.\n\n";
 $emailBody .= "Name: " . htmlspecialchars($name) . "\n";
-$emailBody .= "Email: " . htmlspecialchars($email) . "\n";
 $emailBody .= "Subject: " . htmlspecialchars($subject) . "\n\n";
 $emailBody .= "Message:\n" . htmlspecialchars($message) . "\n";
 
@@ -82,10 +73,7 @@ if (file_exists($phpmailerPath)) {
         
         // Recipients
         $mail->setFrom($fromEmail, 'AAAI Contact Form');
-        foreach ($toEmails as $toEmail) {
-            $mail->addAddress($toEmail);
-        }
-        $mail->addReplyTo($email, $name);
+        $mail->addAddress($toEmail);
         
         // Content
         $mail->isHTML(false);
