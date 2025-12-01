@@ -158,16 +158,44 @@ const initParallax = () => {
 // Form Handling
 const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Get form data
-        const formData = new FormData(contactForm);
-        const data = Object.fromEntries(formData);
+        const submitButton = contactForm.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
         
-        // Show success message (in a real app, you'd send this to a server)
-        alert('Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.');
-        contactForm.reset();
+        // Disable button and show loading state
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending...';
+        
+        try {
+            // Get form data
+            const formData = new FormData(contactForm);
+            
+            // Send to PHP endpoint
+            const response = await fetch('send-email.php', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                // Show success message
+                alert('Thank you for your message! We will contact you soon.');
+                contactForm.reset();
+            } else {
+                // Show error message
+                alert('Error: ' + (result.message || 'Failed to send message. Please try again.'));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while sending your message. Please try again later.');
+        } finally {
+            // Re-enable button
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+        }
     });
 }
 
