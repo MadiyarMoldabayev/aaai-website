@@ -1,0 +1,16 @@
+{
+  "name": "aaai-website",
+  "version": "1.0.0",
+  "description": "AAAI Website with Netlify Functions",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.8"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+

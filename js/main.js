@@ -178,13 +178,19 @@ if (contactForm) {
                 console.log(key + ':', value);
             }
             
-            // Send to PHP endpoint
-            const response = await fetch('send-email.php', {
+            // Convert FormData to JSON for Netlify Function
+            const formDataObj = {};
+            for (let [key, value] of formData.entries()) {
+                formDataObj[key] = value;
+            }
+            
+            // Send to Netlify Function endpoint
+            const response = await fetch('/.netlify/functions/send-email', {
                 method: 'POST',
-                body: formData,
                 headers: {
-                    // Don't set Content-Type - let browser set it with boundary for FormData
-                }
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formDataObj)
             });
             
             console.log('Response status:', response.status);
