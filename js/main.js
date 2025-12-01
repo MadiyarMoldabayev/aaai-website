@@ -178,19 +178,42 @@ if (contactForm) {
                 body: formData
             });
             
-            const result = await response.json();
+            // Check if response is ok
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            // Try to parse JSON response
+            let result;
+            try {
+                result = await response.json();
+            } catch (jsonError) {
+                console.error('JSON parse error:', jsonError);
+                const text = await response.text();
+                console.error('Response text:', text);
+                throw new Error('Invalid response from server. Please try again later.');
+            }
             
             if (result.success) {
                 // Show success message
                 alert('Thank you for your message! We will contact you soon.');
                 contactForm.reset();
             } else {
-                // Show error message
+                // Show error message from server
                 alert('Error: ' + (result.message || 'Failed to send message. Please try again.'));
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred while sending your message. Please try again later.');
+            // Provide more specific error message
+            let errorMessage = 'An error occurred while sending your message. ';
+            if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                errorMessage += 'Please check your internet connection and try again.';
+            } else if (error.message.includes('HTTP error')) {
+                errorMessage += 'Server error. Please try again later.';
+            } else {
+                errorMessage += 'Please try again later.';
+            }
+            alert(errorMessage);
         } finally {
             // Re-enable button
             submitButton.disabled = false;
