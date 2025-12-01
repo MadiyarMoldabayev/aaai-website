@@ -45,7 +45,7 @@ html {
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     line-height: 1.6;
     color: var(--text);
     background: var(--bg);
@@ -749,6 +749,7 @@ body {
     mask-composite: exclude;
     opacity: 0;
     transition: opacity 0.4s;
+    pointer-events: none;
 }
 
 .team-member:hover::after {
@@ -777,6 +778,13 @@ body {
     overflow: hidden;
 }
 
+.team-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
 .team-avatar::before {
     content: '';
     position: absolute;
@@ -797,6 +805,8 @@ body {
 
 .team-info {
     text-align: center;
+    position: relative;
+    z-index: 1;
 }
 
 .team-info h3 {
@@ -857,6 +867,8 @@ body {
     justify-content: center;
     padding-top: 20px;
     border-top: 2px solid var(--border);
+    position: relative;
+    z-index: 1;
 }
 
 .social-btn {
@@ -869,6 +881,10 @@ body {
     font-weight: 600;
     transition: all 0.3s;
     border: 2px solid var(--border);
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+    display: inline-block;
 }
 
 .social-btn:hover {
