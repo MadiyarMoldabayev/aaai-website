@@ -34,7 +34,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 $fromEmail = 'info@aaai.com';
 $toEmails = ['info@aaai.com', 'b.mukina@aaai.com'];
 $smtpHost = 'srv-plesk01.ps.kz';
-$smtpPort = 587;
+$smtpPort = 465;
 $smtpUsername = 'info@aaai.com';
 $smtpPassword = 'Astana2025$';
 
@@ -50,10 +50,7 @@ $emailBody .= "Message:\n" . htmlspecialchars($message) . "\n";
 if (file_exists('vendor/autoload.php')) {
     require_once 'vendor/autoload.php';
     
-    use PHPMailer\PHPMailer\PHPMailer;
-    use PHPMailer\PHPMailer\Exception;
-    
-    $mail = new PHPMailer(true);
+    $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
     
     try {
         // Server settings
@@ -62,10 +59,22 @@ if (file_exists('vendor/autoload.php')) {
         $mail->SMTPAuth = true;
         $mail->Username = $smtpUsername;
         $mail->Password = $smtpPassword;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        // Port 465 uses SSL/TLS, port 587 uses STARTTLS
+        if ($smtpPort == 465) {
+            $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS; // SSL for port 465
+        } else {
+            $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS; // STARTTLS for port 587
+        }
         $mail->Port = $smtpPort;
         $mail->CharSet = 'UTF-8';
         $mail->Encoding = 'base64';
+        $mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
         
         // Enable verbose debug output (disable in production)
         // $mail->SMTPDebug = 2;
@@ -85,9 +94,12 @@ if (file_exists('vendor/autoload.php')) {
         $mail->send();
         
         echo json_encode(['success' => true, 'message' => 'Message sent successfully']);
-    } catch (Exception $e) {
+    } catch (\PHPMailer\PHPMailer\Exception $e) {
         http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Failed to send email: ' . $mail->ErrorInfo]);
+        $errorMessage = 'Failed to send email: ' . $mail->ErrorInfo;
+        // Log error for debugging (remove sensitive info in production)
+        error_log('Email send error: ' . $errorMessage);
+        echo json_encode(['success' => false, 'message' => $errorMessage]);
     }
 } else {
     // Fallback: Use PHP's mail() function with SMTP configuration via ini_set
