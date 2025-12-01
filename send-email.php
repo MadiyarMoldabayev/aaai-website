@@ -47,8 +47,9 @@ $emailBody .= "Subject: " . htmlspecialchars($subject) . "\n\n";
 $emailBody .= "Message:\n" . htmlspecialchars($message) . "\n";
 
 // Try to use PHPMailer if available
-if (file_exists('vendor/autoload.php')) {
-    require_once 'vendor/autoload.php';
+$phpmailerPath = __DIR__ . '/vendor/autoload.php';
+if (file_exists($phpmailerPath)) {
+    require_once $phpmailerPath;
     
     $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
     
@@ -99,32 +100,17 @@ if (file_exists('vendor/autoload.php')) {
         $errorMessage = 'Failed to send email: ' . $mail->ErrorInfo;
         // Log error for debugging (remove sensitive info in production)
         error_log('Email send error: ' . $errorMessage);
-        echo json_encode(['success' => false, 'message' => $errorMessage]);
+        // Return sanitized error message (don't expose full SMTP details to client)
+        echo json_encode(['success' => false, 'message' => 'Failed to send email. Please try again later or contact us directly.']);
     }
 } else {
-    // Fallback: Use PHP's mail() function with SMTP configuration via ini_set
-    ini_set('SMTP', $smtpHost);
-    ini_set('smtp_port', $smtpPort);
-    ini_set('sendmail_from', $fromEmail);
-    
-    $headers = "From: " . $fromEmail . "\r\n";
-    $headers .= "Reply-To: " . $email . "\r\n";
-    $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
-    $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
-    
-    $success = true;
-    foreach ($toEmails as $toEmail) {
-        if (!mail($toEmail, $emailSubject, $emailBody, $headers)) {
-            $success = false;
-        }
-    }
-    
-    if ($success) {
-        echo json_encode(['success' => true, 'message' => 'Message sent successfully']);
-    } else {
-        http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Failed to send email. Please ensure PHP mail() is configured correctly.']);
-    }
+    // PHPMailer not installed - provide helpful error message
+    http_response_code(500);
+    error_log('PHPMailer not found at: ' . $phpmailerPath);
+    echo json_encode([
+        'success' => false, 
+        'message' => 'Email service not configured. Please install PHPMailer by running: composer install'
+    ]);
 }
 ?>
 
