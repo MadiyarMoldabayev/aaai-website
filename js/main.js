@@ -192,17 +192,22 @@ if (contactForm) {
             
             // Check if response is ok
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error('HTTP error response:', errorText);
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
+            
+            // Read response as text first, then parse as JSON
+            const responseText = await response.text();
+            console.log('Response text:', responseText);
             
             // Try to parse JSON response
             let result;
             try {
-                result = await response.json();
+                result = JSON.parse(responseText);
             } catch (jsonError) {
                 console.error('JSON parse error:', jsonError);
-                const text = await response.text();
-                console.error('Response text:', text);
+                console.error('Response text that failed to parse:', responseText);
                 throw new Error('Invalid response from server. Please try again later.');
             }
             
