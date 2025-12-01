@@ -66,8 +66,15 @@ const animateStats = () => {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                const target = parseInt(entry.target.getAttribute('data-target'));
-                animateNumber(entry.target, 0, target, 2000);
+                const targetValue = entry.target.getAttribute('data-target');
+                if (targetValue === '###') {
+                    entry.target.textContent = '###';
+                } else {
+                    const target = parseInt(targetValue);
+                    if (!isNaN(target)) {
+                        animateNumber(entry.target, 0, target, 2000);
+                    }
+                }
                 observer.unobserve(entry.target);
             }
         });
