@@ -31,11 +31,11 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 // Email configuration
-$fromEmail = 'info@aaai.com';
-$toEmails = ['info@aaai.com', 'b.mukina@aaai.com'];
+$fromEmail = 'info@aaai.kz';
+$toEmails = ['info@aaai.kz', 'b.mukina@aaai.com'];
 $smtpHost = 'srv-plesk01.ps.kz';
 $smtpPort = 465;
-$smtpUsername = 'info@aaai.com';
+$smtpUsername = 'info@aaai.kz';
 $smtpPassword = 'Astana2025$';
 
 // Email content
