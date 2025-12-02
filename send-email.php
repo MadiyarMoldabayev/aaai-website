@@ -1,4 +1,9 @@
 <?php
+// Ensure this file is being executed as PHP, not served as text
+if (!defined('PHP_VERSION')) {
+    die('This file must be executed by PHP');
+}
+
 // Start output buffering to prevent any accidental output
 ob_start();
 
@@ -172,5 +177,3 @@ if (file_exists($phpmailerPath)) {
     ]);
     exit;
 }
-?>
-
